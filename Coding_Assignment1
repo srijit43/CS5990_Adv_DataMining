@@ -1,0 +1,84 @@
+# -------------------------------------------------------------------------
+# AUTHOR: Srijit Bhattacharya
+# FILENAME: similarity.py
+# SPECIFICATION: description of the programCosine Similarity
+# FOR: CS 5990 (Advanced Data Mining) - Assignment #1
+# TIME SPENT: 1200 seconds
+# -----------------------------------------------------------*/
+
+# Importing some Python libraries
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
+
+# Defining the documents
+doc1 = "soccer is my favorite sport"
+doc2 = "I like sports and my favorite one is soccer"
+doc3 = "support soccer at the olympic games"
+doc4 = "I do like soccer, my favorite sport in the olympic games"
+
+# Use the following words as terms to create your document-term matrix
+# [soccer, favorite, sport, like, one, support, olympic, games]
+# --> Add your Python code here
+terms = ['soccer', 'favorite', 'sport', 'sports', 'like', 'one', 'support', 'olympic', 'games']
+stopwords = ['I','i', 'am', 'the', 'my', 'do', 'at', 'and', 'in','is']
+
+##the following contains matrix for each doc
+
+documentMatrix = []
+documents = [doc1,doc2,doc3,doc4]
+
+for document in documents:
+    currDocument = document.split()
+    currDocumentMatrix = {}
+    #initiate matrix with zeros
+    for term in terms:
+        currDocumentMatrix[term] = 0
+
+    #loop through the document and populate the matrix
+    for term in currDocument:
+        term = term.replace(",", "")
+        term = term.lower()
+        if term not in stopwords:
+            currDocumentMatrix[term] = currDocumentMatrix[term]+1
+
+    documentMatrix.append(list(currDocumentMatrix.values()))
+
+#print the table
+print(documentMatrix)  #the answer number 1
+
+
+# Compare the pairwise cosine similarities and store the highest one
+# Use cosine_similarity([X], [Y]) to calculate the similarities between 2 vectors only
+# Use cosine_similarity([X, Y, Z]) to calculate the pairwise similarities between multiple vectors
+# --> Add your Python code here
+
+cosineSimilarityDocCombo = {}
+
+for index, row in enumerate(documentMatrix):
+    #terate through rest of the rows in the matrix and then compute cosine similarity
+    subindex = index + 1
+    while subindex < len(documentMatrix):
+        docCombo = "Doc_" + str((index + 1)) + " - Doc_" + str((subindex+1))
+        docComboCosineSimilarity = list(cosine_similarity([np.array(documentMatrix[index])], [np.array(documentMatrix[subindex])]))[0][0]
+        subindex = subindex + 1
+        #append to the final
+        cosineSimilarityDocCombo[docCombo] = docComboCosineSimilarity
+
+#to print every document cosine similarity
+
+print("The cosine similarity for all documents are given below:")
+
+for docCombination,cosineSimilarity in cosineSimilarityDocCombo.items():
+    print("Document Combination:", docCombination, "Cosine Similarity:", cosineSimilarity)
+
+
+
+
+
+
+# Print the highest cosine similarity following the information below
+# The most similar documents are: doc1 and doc2 with cosine similarity = x
+# --> Add your Python code here
+
+desc_order_sorting = sorted(cosineSimilarityDocCombo.items(), key=lambda x:x[1], reverse = True)
+print("The most similar document combination is ", desc_order_sorting[0])
