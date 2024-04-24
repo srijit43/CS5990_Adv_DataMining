@@ -4,7 +4,7 @@
 # SPECIFICATION: The goal is to build a base classifier by using a single
 # decision tree, an ensemble classifier that combines multiple decision trees,
 # and a Random Forest classifier to recognize those digits.
-# FOR: CS 4210- Assignment #3
+# FOR: CS 5990- Assignment #4
 # TIME SPENT: 100 minutes
 # -----------------------------------------------------------*/
 from sklearn import tree
